@@ -4,10 +4,10 @@
 
 int ExeSolution::runProgram()
 {
-	
+	return 0;
 }
 
-int ExeSolution::getMaxFlow(int source, int sink, int parent[], int path[], int pathCapacity[], int pathFlow[], int pathFlowIndex)
+int ExeSolution::getMaxFlow(int source, int sink, int parent[], int path[], int pathCapacity[], int pathFlow[], int pathFlowIndex[])
 {
 	int maxFlow = 0;
 	while (BFS(source, sink, parent))
@@ -28,12 +28,14 @@ int ExeSolution::getMaxFlow(int source, int sink, int parent[], int path[], int 
 }
 
 int ExeSolution::Djikstra(int source, int sink)
-{}
+{
+	return 0;
+}
 
 bool ExeSolution::BFS(int source, int sink, int parent[])
 {
-	bool visited[graph.vertixAmount]; // TODO get the graph
-	for (int i = 0; i < graph.vertixAmount; ++i)
+	bool visited[1];//[graph.vertixAmount]; // TODO get the graph
+	for (int i = 0; i < 1; ++i)// graph.vertixAmount; ++i)
 	{
 		visited[i] = false;
 	}
@@ -45,7 +47,7 @@ bool ExeSolution::BFS(int source, int sink, int parent[])
 	{
 		int curr = q.front();
 		q.pop();
-		Node* currNode = graph.adjGraphArr[curr].head;
+		Node* currNode = NULL;// graph.adjGraphArr[curr].head;
 		while (currNode != nullptr)
 		{
 			if (!visited[currNode->nodeId] && currNode->weight > 0)

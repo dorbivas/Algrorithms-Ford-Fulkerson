@@ -13,13 +13,13 @@ struct graphEdge {
 	{}
 }; 
 
-class Graph {
+class graph {
 public:
 	int vertixAmount;
 	int edgesAmount;
 
-	Graph(int numberOfVector);
-	~Graph();
+	graph(int numberOfVector);
+	~graph();
 
 	void MakeEmptyGraph();
 	bool IsAdjacent(int startVer, int endVer) const;
@@ -32,7 +32,7 @@ public:
 
 	Node* GetAdjListNode(int index, LinkedList adjArrGraph);
 	LinkedList& operator [](int start_ver) const;
-	friend ostream& operator<<(ostream& os, Graph& graph);
+	friend ostream& operator<<(ostream& os, graph& graph);
 
 private:
 	enum eColor { WHITE, GRAY, BLACK };
@@ -44,6 +44,6 @@ private:
 	bool edgeExists(int startVer, int endVer) const;
 	static Node* createAdjNode(int value, int weight);
 	void setFlagInit(int flagInit);
-	friend ostream& operator<<(ostream& os, const Graph& graph);
+	friend ostream& operator<<(ostream& os, const graph& graph);
 };
 

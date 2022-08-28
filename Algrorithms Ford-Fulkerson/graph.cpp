@@ -1,16 +1,16 @@
-#include "Graph.h"
+#include "graph.h"
 #include "ProgramException.h"
 
 using namespace std;
 //if tree is connected, all neighbors should be visited eventually, since we know it has no cycles,
 //we can ensure if all nodes were visited they finish black eventually.
 
-Graph::~Graph()
+graph::~graph()
 {
 	delete[] adjGraphArr;
 }
 
-bool Graph::IsConnectedVisit() {
+bool graph::IsConnectedVisit() {
 
 	for (int i = 0; i < vertixAmount; ++i)
 	{
@@ -37,9 +37,8 @@ bool Graph::IsConnectedVisit() {
 	return status;
 }
 
-void Graph::visit(int vertexId) {
-
-	colorArr[vertexId] = GRAY;
+void graph::visit(int vertexId) {
+	colorArr[vertexId] =GRAY;
 	Node* currNode = adjGraphArr[vertexId].head;
 	while (currNode != nullptr) {
 
@@ -56,30 +55,30 @@ void Graph::visit(int vertexId) {
 	colorArr[vertexId] = BLACK;
 }
 
-Graph::Graph(const int numberOfVector)
+graph::graph(const int numberOfVector)
 {
 	vertixAmount = numberOfVector;
 	colorArr = new eColor[vertixAmount];
 	MakeEmptyGraph();
 }
 
-Node* Graph::GetAdjListNode(const int index, LinkedList adjArrGraph)
+Node* graph::GetAdjListNode(const int index, LinkedList adjArrGraph)
 {
 	return adjArrGraph.find(index);
 }
 
-LinkedList& Graph::GetAdjList(int index) const
+LinkedList& graph::GetAdjList(int index) const
 {
 	return adjGraphArr[index];
 }
 
-void Graph::MakeEmptyGraph()
+void graph::MakeEmptyGraph()
 {
 	adjGraphArr = new LinkedList[vertixAmount]();
 	FLAG_INIT = true;
 }
 
-void Graph::AddEdge(int start_ver, int end_ver, int weight)
+void graph::AddEdge(int start_ver, int end_ver, int weight)
 {
 	if (IsAdjacent(start_ver, end_ver) == true)
 	{
@@ -95,12 +94,12 @@ void Graph::AddEdge(int start_ver, int end_ver, int weight)
 	}
 }
 
-LinkedList& Graph::operator[](const int start_ver) const
+LinkedList& graph::operator[](const int start_ver) const
 {
 	return adjGraphArr[start_ver];
 }
 
-bool Graph::RemoveEdge(const int startVer, const int endVer)
+bool graph::RemoveEdge(const int startVer, const int endVer)
 {
 	bool status = true;
 	if (this->adjGraphArr != nullptr)
@@ -130,17 +129,17 @@ bool Graph::RemoveEdge(const int startVer, const int endVer)
 }
 
 
-void Graph::setFlagInit(const int flagInit)
+void graph::setFlagInit(const int flagInit)
 {
 	FLAG_INIT = flagInit;
 }
 
-bool Graph::IsAdjacent(const int startVer, const int endVer) const
+bool graph::IsAdjacent(const int startVer, const int endVer) const
 {
 	return edgeExists(endVer, startVer);
 }
 
-bool Graph::edgeExists(const int startVer, const int endVer) const
+bool graph::edgeExists(const int startVer, const int endVer) const
 {
 	bool status = false;
 	Node* curr = adjGraphArr[startVer].head;
@@ -159,7 +158,7 @@ bool Graph::edgeExists(const int startVer, const int endVer) const
 }
 
 //next and brother aren't set here because they might not exist yet
-Node* Graph::createAdjNode(const int value, const int weight)
+Node* graph::createAdjNode(const int value, const int weight)
 {
 	auto newNode = new Node();
 	newNode->nodeId = value;
@@ -167,7 +166,7 @@ Node* Graph::createAdjNode(const int value, const int weight)
 	return newNode;
 }
 
-ostream& operator<<(ostream& os, Graph& graph)
+ostream& operator<<(ostream& os, graph& graph)
 {
 	os << "Graph adjacency list " << endl << "(start_vertex, end_vertex, weight):" << endl;
 	for (int i = 0; i < graph.vertixAmount; i++)
@@ -180,7 +179,7 @@ ostream& operator<<(ostream& os, Graph& graph)
 	return os;
 }
 
-void Graph::PrintColorArray() const
+void graph::PrintColorArray() const
 {
 	for (int i = 0; i < vertixAmount; ++i)
 	{
