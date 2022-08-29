@@ -2,9 +2,10 @@
 
 int ExeSolution::runProgram()
 {
+	
 	try
 	{
-		readData();
+		int* sourceSink = readData();
 
 		if (!graph->IsConnectedVisit())
 		{
@@ -14,13 +15,14 @@ int ExeSolution::runProgram()
 			throw e;
 		}
 		else {
-			int maxFlow;
-			//auto maxFlowBfs = FordFulkerson(*graph, source, sink); TODO
+			int maxFlow=0;
+			//auto maxFlowBfs = FordFulkerson(*graph, sourceSink[0], sourceSink[1]);
 			cout << "BFS Method:" << endl;
-			cout << "Max flow = " << maxFlow << endl;
-			//auto maxFlowDji = FordFulkerson(*graph, source, sink);
+		//	cout << "Max flow = " << maxFlowBfs << endl;
+			//auto maxFlowDji = FordFulkerson(*graph, sourceSink[0], sourceSink[1]);
 			cout << "Greedy Method:" << endl;
-			cout << "Max flow = " << maxFlow << endl;
+		//	cout << "Max flow = " << maxFlowDji << endl;
+			return 0;
 		}
 	}
 	catch (ProgramException e)
@@ -30,10 +32,12 @@ int ExeSolution::runProgram()
 			cout << e.what() << endl;
 			cout << "The graph is not connected\n";
 		}
+		return 0;
 	}
 	catch (...)
 	{
 		cout << "Unknown error\n";
+		return 0;
 	}
 }
 
@@ -42,15 +46,17 @@ ExeSolution::~ExeSolution()
 	delete graph;
 }
 
-void ExeSolution::readData()
+int* ExeSolution::readData()
 {
 	int numOfVertices = 0, numOfArcs = 0, s = 0, t = 0;
+	int sourceSink[2];
+	vector<graphArc> edgesArrInput;//TODO FIX
 
 	cout << "Enter the number of vertices in the graph\n";
-	cin >> numOfVertices;
+	cin >> numOfVertices;//TODO EXCEPTION
 
-	cout << "Enter the number of arcs in the graph\n"; //TODO fix this 
-	cin >> numOfArcs;
+	cout << "Enter the number of arcs in the graph\n";
+	cin >> numOfArcs;//TODO EXCEPTION
 
 	while (s <= 0) {
 		cout << "Enter v1\n";
@@ -61,15 +67,21 @@ void ExeSolution::readData()
 		cout << "Enter t\n";
 		cin >> t;
 	}
+	sourceSink[0] = s;
+	sourceSink[1] = t;
 
 	for (int i = 0; i < numOfArcs; i++)
 	{
 		int v1 = 0, v2 = 0, capacity = 0;
 		cout << "Enter v1, v2, capacity\n";
 		cin >> v1 >> v2 >> capacity;
-		//graph->AddArc(v1, v2, capacity); TODO
+		//TODO EXCEPTION
+		edgesArrInput.push_back(graphArc(v1, v2, capacity));
 	}
-
+		
+	createGraphFromInput(numOfVertices, numOfArcs, edgesArrInput);
+	return sourceSink;
+	
 }
 
 void  ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsAmount, const vector<graphArc>& edgesArrInput)
@@ -106,15 +118,39 @@ int ExeSolution::getMaxFlow(int source, int sink, int parent[], int path[], int 
 	return maxFlow;
 }
 
-int ExeSolution::Djikstra(int source, int sink)
+int ExeSolution::Djikstra(int source, int sink)//TODO
 {
 	return 0;
 }
 
+int ExeSolution::FordFulkerson(Graph& graph, int source, int sink) { //TODO
+
+	int* parent = new int[graph.vertixAmount];
+	int* path=new int[graph.vertixAmount];
+	int* pathCapacity = new int[graph.vertixAmount];
+	int* pathFlow = new int[graph.vertixAmount];
+	int* pathFlowIndex = new int[graph.vertixAmount];
+	for (int i = 0; i < graph.vertixAmount; i++)
+	{
+		parent[i] = -1;
+		path[i] = -1;
+		pathCapacity[i] = 0;
+		pathFlow[i] = 0;
+		pathFlowIndex[i] = 0;
+	}
+	delete parent;
+	delete path;
+	delete pathCapacity;
+	delete pathFlow;
+	delete pathFlowIndex;
+	
+	return getMaxFlow(source, sink, parent, path, pathCapacity, pathFlow, pathFlowIndex);
+}
 bool ExeSolution::BFS(int source, int sink, int parent[])
 {
-	bool visited[1];//[graph.vertixAmount]; // TODO get the graph
-	for (int i = 0; i < 1; ++i)// graph.vertixAmount; ++i)
+	const int vertixAmount= this->graph->vertixAmount;
+	bool* visited = new bool[vertixAmount];
+	for (int i = 0; i < vertixAmount; ++i)
 	{
 		visited[i] = false;
 	}

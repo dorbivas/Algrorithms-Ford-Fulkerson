@@ -9,14 +9,13 @@ class ExeSolution
 {
 public:
 	int runProgram();
-	ExeSolution();
 	~ExeSolution();
 	Graph* graph = nullptr;
 
 private:
-	
+
 	void createGraphFromInput(const int& vertixAmount, const int& arcsAmount, const vector<graphArc>& edgesArrInput);
-	void readData();
+	int* readData();
 	int FordFulkerson(Graph& graph, int source, int sink);
 	int getMaxFlow(int source, int sink);
 	int getMaxFlow(int source, int sink, int parent[], int path[], int pathCapacity[], int pathFlow[], int pathFlowIndex[]);
