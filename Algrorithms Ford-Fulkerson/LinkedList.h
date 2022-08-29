@@ -8,7 +8,7 @@ using namespace std;
 struct Node
 {
 	int nodeId = UNINIT;
-	int weight = UNINIT;
+	int capacity = UNINIT;
 	Node* next = nullptr;
 	bool includedFlag = false;
 	Node* brother = nullptr;
@@ -29,8 +29,8 @@ public:
 
 	~LinkedList();
 	bool IsEmpty() const;
-	void InsertHead(int index, int weight);
-	void InsertTail(int index, int weight);
+	void InsertHead(int index, int capacity);
+	void InsertTail(int index, int capacity);
 	bool RemoveNode(int indexRemoved);
 
 

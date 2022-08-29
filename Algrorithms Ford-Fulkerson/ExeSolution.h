@@ -11,11 +11,13 @@ public:
 	int runProgram();
 	ExeSolution();
 	~ExeSolution();
+	Graph* graph = nullptr;
 
 private:
-	void readData();
 	
-	int FordFulkerson(graph& graph, int source, int sink);
+	void createGraphFromInput(const int& vertixAmount, const int& arcsAmount, const vector<graphArc>& edgesArrInput);
+	void readData();
+	int FordFulkerson(Graph& graph, int source, int sink);
 	int getMaxFlow(int source, int sink);
 	int getMaxFlow(int source, int sink, int parent[], int path[], int pathCapacity[], int pathFlow[], int pathFlowIndex[]);
 	int Djikstra(int source, int sink);

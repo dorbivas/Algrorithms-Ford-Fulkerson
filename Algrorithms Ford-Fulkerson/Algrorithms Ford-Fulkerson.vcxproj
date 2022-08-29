@@ -144,14 +144,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ExeSolution.cpp" />
-    <ClCompile Include="graph.cpp" />
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExeSolution.h" />
-    <ClInclude Include="graph.h" />
+    <ClInclude Include="Graph.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="ProgramException.h" />

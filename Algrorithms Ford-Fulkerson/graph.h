@@ -5,26 +5,26 @@
 using namespace std;
 
 // structure to store edges
-struct graphEdge {
-	int startVertex, endVertex, weight;
-	graphEdge() {}
+struct graphArc {
+	int startVertex, endVertex, capacity;
+	graphArc() {}
 
-	graphEdge(int _startVer, int _endVer, int _weight) : startVertex(_startVer), endVertex(_endVer), weight(_weight)
+	graphArc(int _startVer, int _endVer, int _capacity) : startVertex(_startVer), endVertex(_endVer), capacity(_capacity)
 	{}
 }; 
 
-class graph {
+class Graph {
 public:
 	int vertixAmount;
 	int edgesAmount;
 
-	graph(int numberOfVector);
-	~graph();
+	Graph(int numberOfVector);
+	~Graph();
 
 	void MakeEmptyGraph();
 	bool IsAdjacent(int startVer, int endVer) const;
-	void AddEdge(int start_ver, int end_ver, int weight);
-	bool RemoveEdge(int startVer, int endVer);
+	void AddArc(int start_ver, int end_ver, int capacity);
+	bool RemoveArc(int startVer, int endVer);
 
 	bool IsConnectedVisit();
 	void PrintColorArray() const;
@@ -32,18 +32,18 @@ public:
 
 	Node* GetAdjListNode(int index, LinkedList adjArrGraph);
 	LinkedList& operator [](int start_ver) const;
-	friend ostream& operator<<(ostream& os, graph& graph);
+	friend ostream& operator<<(ostream& os, Graph& graph);
 
 private:
 	enum eColor { WHITE, GRAY, BLACK };
-	LinkedList* adjGraphArr;
+	LinkedList* graph;
 	eColor* colorArr;
 	int FLAG_INIT = false;
 
 	void visit(int vertexId);
-	bool edgeExists(int startVer, int endVer) const;
-	static Node* createAdjNode(int value, int weight);
+	bool ArcExists(int startVer, int endVer) const;
+	static Node* createAdjNode(int value, int capacity);
 	void setFlagInit(int flagInit);
-	friend ostream& operator<<(ostream& os, const graph& graph);
+	friend ostream& operator<<(ostream& os, const Graph& graph);
 };
 

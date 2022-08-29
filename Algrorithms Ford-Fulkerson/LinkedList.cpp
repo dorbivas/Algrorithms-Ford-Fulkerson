@@ -19,11 +19,11 @@ bool LinkedList::IsEmpty() const
 	return head == nullptr;
 }
 
-void LinkedList::InsertHead(const int index, const int weight)
+void LinkedList::InsertHead(const int index, const int capacity)
 {
 	temp = new Node;
 	temp->nodeId = index;
-	temp->weight = weight;
+	temp->capacity = capacity;
 
 	if (IsEmpty())
 	{
@@ -36,11 +36,11 @@ void LinkedList::InsertHead(const int index, const int weight)
 	++size;
 }
 
-void LinkedList::InsertTail(const int index, const int weight)
+void LinkedList::InsertTail(const int index, const int capacity)
 {
 	temp = new Node;
 	temp->nodeId = index;
-	temp->weight = weight;
+	temp->capacity = capacity;
 	temp->next = nullptr;
 	if (IsEmpty())
 		head = tail = temp;
@@ -111,7 +111,7 @@ Node* LinkedList::find(int data)
 ostream& operator<<(ostream& os, const Node& vertex)
 {
 	os << "(" << vertex.nodeId + 1
-		<< ", " << vertex.weight << ") ";
+		<< ", " << vertex.capacity << ") ";
 	return os;
 }
 
