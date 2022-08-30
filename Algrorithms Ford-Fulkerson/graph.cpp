@@ -44,7 +44,7 @@ void Graph::visit(int vertexId) {
 
 		if (currNode->brother->includedFlag != true) //if not brothers
 		{
-			currNode->brother->includedFlag = true;
+			//currNode->brother->includedFlag = true;
 			currNode->includedFlag = true;
 			if (colorArr[currNode->nodeId] == WHITE) {
 				visit(currNode->nodeId);
@@ -80,16 +80,17 @@ void Graph::MakeEmptyGraph()
 
 void Graph::AddArc(int start_ver, int end_ver, int capacity)
 {
-	if (IsAdjacent(start_ver, end_ver) == true)
+	if (ArcExists(start_ver, end_ver) == true)
 	{
 		throw ProgramException();
 	}
 	else
 	{
 		graph[start_ver].InsertTail(end_ver, capacity);
-		graph[end_ver].InsertTail(start_ver, capacity);
-		graph[end_ver].tail->brother = graph[start_ver].tail;
+		//graph[end_ver].InsertTail(start_ver, capacity);//TODO fix
+		//graph[end_ver].tail->brother = graph[start_ver].tail;
 		graph[start_ver].tail->brother = graph[end_ver].tail;
+		
 		++edgesAmount;
 	}
 }
@@ -134,10 +135,10 @@ void Graph::setFlagInit(const int flagInit)
 	FLAG_INIT = flagInit;
 }
 
-bool Graph::IsAdjacent(const int startVer, const int endVer) const
+/*bool Graph::ArcExists(const int startVer, const int endVer) const
 {
-	return ArcExists(endVer, startVer);
-}
+	return ArcExists(startVer,endVer);
+}*/
 
 bool Graph::ArcExists(const int startVer, const int endVer) const
 {

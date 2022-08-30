@@ -22,7 +22,7 @@ public:
 	~Graph();
 
 	void MakeEmptyGraph();
-	bool IsAdjacent(int startVer, int endVer) const;
+	bool ArcExists(int startVer, int endVer) const;
 	void AddArc(int start_ver, int end_ver, int capacity);
 	bool RemoveArc(int startVer, int endVer);
 
@@ -41,7 +41,6 @@ private:
 	int FLAG_INIT = false;
 
 	void visit(int vertexId);
-	bool ArcExists(int startVer, int endVer) const;
 	static Node* createAdjNode(int value, int capacity);
 	void setFlagInit(int flagInit);
 	friend ostream& operator<<(ostream& os, const Graph& graph);
