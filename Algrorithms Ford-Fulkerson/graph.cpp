@@ -42,13 +42,9 @@ void Graph::visit(int vertexId) {
 	Node* currNode = graph[vertexId].head;
 	while (currNode != nullptr) {
 
-		if (currNode->brother->includedFlag != true) //if not brothers
-		{
-			//currNode->brother->includedFlag = true;
-			currNode->includedFlag = true;
-			if (colorArr[currNode->nodeId] == WHITE) {
-				visit(currNode->nodeId);
-			}
+		currNode->includedFlag = true;
+		if (colorArr[currNode->nodeId] == WHITE) {
+			visit(currNode->nodeId);
 		}
 		currNode = currNode->next;
 	}
@@ -86,10 +82,8 @@ void Graph::AddArc(int start_ver, int end_ver, int capacity)
 	}
 	else
 	{
-		graph[start_ver].InsertTail(end_ver, capacity);
-		//graph[end_ver].InsertTail(start_ver, capacity);//TODO fix
-		//graph[end_ver].tail->brother = graph[start_ver].tail;
-		graph[start_ver].tail->brother = graph[end_ver].tail;
+		graph[end_ver].InsertHead(end_ver, capacity);
+		graph[start_ver].InsertTail(start_ver,end_ver, capacity);
 		
 		++edgesAmount;
 	}
@@ -135,10 +129,6 @@ void Graph::setFlagInit(const int flagInit)
 	FLAG_INIT = flagInit;
 }
 
-/*bool Graph::ArcExists(const int startVer, const int endVer) const
-{
-	return ArcExists(startVer,endVer);
-}*/
 
 bool Graph::ArcExists(const int startVer, const int endVer) const
 {
@@ -158,7 +148,6 @@ bool Graph::ArcExists(const int startVer, const int endVer) const
 	return status;
 }
 
-//next and brother aren't set here because they might not exist yet
 Node* Graph::createAdjNode(const int value, const int capacity)
 {
 	auto newNode = new Node();

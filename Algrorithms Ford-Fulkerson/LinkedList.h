@@ -30,7 +30,7 @@ public:
 	~LinkedList();
 	bool IsEmpty() const;
 	void InsertHead(int index, int capacity);
-	void InsertTail(int index, int capacity);
+	void InsertTail(const int start_ver, const int end_ver, int capacity);
 	bool RemoveNode(int indexRemoved);
 
 

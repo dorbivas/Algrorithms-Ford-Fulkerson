@@ -88,7 +88,7 @@ int* ExeSolution::readData()
 	
 }
 
-void  ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsAmount, const vector<graphArc>& edgesArrInput)
+void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsAmount, const vector<graphArc>& edgesArrInput)
 {
 	graph = new Graph(vertixAmount);
 	graph->vertixAmount = vertixAmount;
@@ -106,7 +106,7 @@ int ExeSolution::getMaxFlow(int source, int sink, int parent[], int path[], int 
 	int maxFlow = 0;
 	while (BFS(source, sink, parent))
 	{
-		int pathFlow = 8000000000;
+		int pathFlow = INT_MAX;
 		for (int i = sink; i != source; i = parent[i])
 		{
 			pathFlow = min(pathFlow, pathCapacity[i]); // todo FIX
@@ -132,7 +132,7 @@ int ExeSolution::FordFulkerson(Graph& graph, int source, int sink) { //TODO
 	{
 		parent[i] = -1;
 		path[i] = -1;
-		pathCapacity[i] = 0;
+		pathCapacity[i] = graph[i].head->capacity;
 		pathFlow[i] = 0;
 		pathFlowIndex[i] = 0;
 	}
@@ -142,7 +142,7 @@ int ExeSolution::FordFulkerson(Graph& graph, int source, int sink) { //TODO
 	delete pathFlow;
 	delete pathFlowIndex;*/
 	
-	return getMaxFlow(source, sink, parent, path, pathCapacity, pathFlow, pathFlowIndex);
+	return getMaxFlow(source-1, sink-1, parent, path, pathCapacity, pathFlow, pathFlowIndex);
 }
 
 bool ExeSolution::BFS(int source, int sink, int parent[])
@@ -161,7 +161,7 @@ bool ExeSolution::BFS(int source, int sink, int parent[])
 	{
 		int curr = q.front();
 		q.pop();
-		Node* currNode = this->graph->GetAdjList(curr).head;
+		Node* currNode = this->graph->GetAdjList(curr).head->next;
 		while (currNode != nullptr)
 		{
 			if (!visited[currNode->nodeId] && currNode->capacity > 0)
