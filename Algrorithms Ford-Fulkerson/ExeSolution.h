@@ -4,6 +4,7 @@
 #include <string>
 #include <queue>
 #include "graph.h"
+#include "Heap.h"
 
 class ExeSolution
 {
@@ -19,7 +20,7 @@ private:
 	int FordFulkerson(Graph& graph, int source, int sink);
 	int getMaxFlow(int source, int sink);
 	int getMaxFlow(int source, int sink, int parent[], int path[], int pathCapacity[], int pathFlow[], int pathFlowIndex[]);
-	int Djikstra(int source, int sink);
+	bool Djikstra(Graph& graph, int source, int sink, int parent[]);
 	bool BFS(int source, int sink, int parent[]);
 
 };

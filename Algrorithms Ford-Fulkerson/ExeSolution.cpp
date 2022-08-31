@@ -176,7 +176,33 @@ bool ExeSolution::BFS(int source, int sink, int parent[])
 	return visited[sink];
 }
 
-int ExeSolution::Djikstra(int source, int sink)//TODO
+bool ExeSolution::Djikstra(Graph& graph, int source, int sink, int parent[])
 {
-	return 0;
+	Heap Q(graph.vertixAmount);
+	vector<int> capacitys(graph.vertixAmount); //Weight array
+
+	for (int i = 0; i < graph.vertixAmount; i++)
+	{
+		capacitys[i] = INT_MAX;
+	}
+	capacitys[source] = 0;
+	Q.Build(capacitys);
+	
+	while (!Q.IsEmpty())
+	{
+		int u = Q.DeleteMin();
+		Node* currNode = this->graph->GetAdjList(u).head;
+		while (currNode != nullptr)
+		{
+			if (capacitys[currNode->nodeId] > capacitys[u] + currNode->capacity)
+			{
+				capacitys[currNode->nodeId] = capacitys[u] + currNode->capacity;
+				parent[currNode->nodeId] = u;
+				Q.DecreaseKey(currNode->nodeId, capacitys[currNode->nodeId]);
+			}
+			currNode = currNode->next;
+		}
+	}
+	return capacitys[sink] != INT_MAX;
 }
+
