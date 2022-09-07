@@ -9,9 +9,9 @@ struct Node
 {
 	int nodeId = UNINIT;
 	int capacity = UNINIT;
+	int flow = UNINIT;
 	Node* next = nullptr;
 	bool includedFlag = false;
-	Node* brother = nullptr;
 	~Node() = default;
 
 private:

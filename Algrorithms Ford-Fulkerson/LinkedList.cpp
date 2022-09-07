@@ -21,25 +21,23 @@ bool LinkedList::IsEmpty() const
 
 void LinkedList::InsertHead(const int index, const int capacity)
 {
+	//Create new node
+	Node* temp1 = new Node;
+	temp1->nodeId = index;
+	temp1->capacity = capacity;
+	temp1->next = nullptr;
 	
-
 	if (IsEmpty())
 	{
-		Node* temp1 = new Node;
-		temp1->nodeId = index;
-		temp1->capacity = capacity;
-
-		temp1->next = nullptr;
-		tail = temp1;
 		head = temp1;
-		++size;
+		tail = temp1;
 	}
-	/*else {//TODO-DELETE
-		temp->next = head;
-		++size;
-	}*/
-	
-	
+	else {
+		temp1->next = head;
+		tail = head;
+		head = temp1;
+	}
+	++size;
 }
 
 void LinkedList::InsertTail(const int start_ver, const int end_ver, const int capacity)

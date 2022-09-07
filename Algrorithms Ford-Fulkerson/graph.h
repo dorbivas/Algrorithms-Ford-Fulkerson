@@ -23,7 +23,8 @@ public:
 
 	void MakeEmptyGraph();
 	bool ArcExists(int startVer, int endVer) const;
-	void AddArc(int start_ver, int end_ver, int capacity);
+	void AddArc(int start_ver, int end_ver, int capacity); // todo changeames n
+	void IncreaseArcFlow(int startVertex, int endVertex, int flow);
 	bool RemoveArc(int startVer, int endVer);
 
 	bool IsConnectedVisit();

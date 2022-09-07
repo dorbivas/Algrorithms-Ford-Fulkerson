@@ -82,11 +82,14 @@ void Graph::AddArc(int start_ver, int end_ver, int capacity)
 	}
 	else
 	{
-		graph[end_ver].InsertHead(end_ver, capacity);
-		graph[start_ver].InsertTail(start_ver,end_ver, capacity);
-		
+		graph[start_ver].InsertHead(end_ver, capacity);
 		++edgesAmount;
 	}
+}
+
+void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow)
+{
+	graph[startVertex].head->flow += flow;
 }
 
 LinkedList& Graph::operator[](const int start_ver) const
@@ -152,6 +155,7 @@ Node* Graph::createAdjNode(const int value, const int capacity)
 {
 	auto newNode = new Node();
 	newNode->nodeId = value;
+	newNode->flow = 0;
 	newNode->capacity = capacity;
 	return newNode;
 }
