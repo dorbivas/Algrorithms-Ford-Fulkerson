@@ -134,8 +134,12 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink)
 		}
 		for (int i = sink; i != source; i = parent[i])
 		{
-			graph.IncreaseArcFlow(parent[i], i, pathFlow);
-			graph.IncreaseArcFlow(i, parent[i], -pathFlow);
+			graph.IncreaseArcFlow(i, parent[i], pathFlow);
+			
+			if (graph.ArcExists(parent[i],  i)	)
+				graph.IncreaseArcFlow(parent[i], i, pathFlow);
+			else
+				graph.AddArc(parent[i],  i, pathFlow);
 		}
 		maxFlow += pathFlow;
 	}
@@ -215,7 +219,7 @@ bool ExeSolution::Djikstra(Graph& graph, int source, int sink, int parent[])
 		Node* currNode = this->graph->GetAdjList(u).head;
 		while (currNode != nullptr)
 		{
-			if (capacitys[currNode->nodeId] > capacitys[u] + currNode->capacity)
+			if (capacitys[currNode->nodeId] > capacitys[u] + currNode->capacity)//todo <
 			{
 				capacitys[currNode->nodeId] = capacitys[u] + currNode->capacity;
 				parent[currNode->nodeId] = u;

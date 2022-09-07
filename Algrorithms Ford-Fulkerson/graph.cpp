@@ -89,7 +89,11 @@ void Graph::AddArc(int start_ver, int end_ver, int capacity)
 
 void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow)
 {
-	graph[startVertex].head->flow += flow;
+	int distant = graph[startVertex].head->capacity - flow;
+	if (distant > 0)
+		graph[startVertex].head->flow = distant;
+	else
+		graph[startVertex].head->flow = 0;
 }
 
 LinkedList& Graph::operator[](const int start_ver) const
