@@ -194,3 +194,17 @@ void Graph::PrintColorArray() const
 		cout << "Index: " << i << " Color: " << colorArr[i] << endl;
 	}
 }
+
+//print all the vertices connected to a vertex and the flow
+void Graph::printAllgraph() const
+{
+	for (int i = 0; i < vertixAmount; ++i)
+	{
+		Node* currNode = graph[i].head;
+		while (currNode != nullptr)
+		{
+			cout << "Start vertex: " << i << " End vertex: " << currNode->nodeId << " Flow: " << currNode->flow << endl;
+			currNode = currNode->next;
+		}
+	}
+}

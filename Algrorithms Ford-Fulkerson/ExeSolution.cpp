@@ -2,7 +2,7 @@
 
 int ExeSolution::runProgram()
 {
-	
+
 	try
 	{
 		int* sourceSink = readData();
@@ -16,12 +16,12 @@ int ExeSolution::runProgram()
 		}
 		else {
 			//Graph* copyGraph = new Graph(graph);//COPY CONSTRUCTOR
-			int maxFlow=0;
-			auto maxFlowBfs = getMaxFlow(*graph, sourceSink[0], sourceSink[1],false);
+			int maxFlow = 0;
+			auto maxFlowBfs = getMaxFlow(*graph, sourceSink[0], sourceSink[1], false);
 			cout << "BFS Method:" << endl;
 			cout << "Max flow = " << maxFlowBfs << endl;
 			//TODO MINCUT
-			
+
 			/*auto maxFlowDji = getMaxFlow(*copyGraph, sourceSink[0], sourceSink[1], true);
 			cout << "Greedy Method:" << endl;
 			cout << "Max flow = " << maxFlowDji << endl;*/
@@ -75,7 +75,7 @@ int* ExeSolution::readData()
 		cout << "Enter t\n";
 		cin >> t;
 	}
-	if(s==t)
+	if (s == t)
 	{
 		ProgramException e;
 		e.isConnected = false;
@@ -98,7 +98,7 @@ int* ExeSolution::readData()
 		createGraphFromInput(numOfVertices, numOfArcs, edgesArrInput);
 		return sourceSink;
 	}
-	
+
 }
 
 void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsAmount, const vector<graphArc>& edgesArrInput)
@@ -114,7 +114,7 @@ void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsA
 
 }
 
-int ExeSolution::getMaxFlow(Graph& graph, int source, int sink,bool isItGreedyMethod)//TODO COMMON FUNCTION
+int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyMethod)//TODO COMMON FUNCTION
 {
 	int maxFlow = 0;
 	vector<int> parent(graph.vertixAmount);
@@ -152,22 +152,23 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink,bool isItGreedyMe
 				graph.IncreaseArcFlow(parent[i], i, pathFlow);
 
 				if (graph.ArcExists(i, parent[i]))
-					graph.IncreaseArcFlow(parent[i], i, -pathFlow);
+					graph.IncreaseArcFlow(parent[i], i, pathFlow);
 				else
 					graph.AddArc(i, parent[i], pathFlow);
 			}
 			maxFlow += pathFlow;
+			graph.printAllgraph();
 		}
-		
+
 	}
 	return maxFlow;
-	
+
 }
 
 
 bool ExeSolution::BFS(int source, int sink, vector<int>& parent)
 {
-	const int vertixAmount= this->graph->vertixAmount;
+	const int vertixAmount = this->graph->vertixAmount;
 	bool* visited = new bool[vertixAmount];
 	for (int i = 0; i < vertixAmount; ++i)
 	{
@@ -207,7 +208,7 @@ bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& pare
 	}
 	capacitys[source] = 0;
 	Q.Build(capacitys);
-	
+
 	while (!Q.IsEmpty())
 	{
 		int u = Q.DeleteMin();

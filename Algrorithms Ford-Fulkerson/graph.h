@@ -34,6 +34,9 @@ public:
 	Node* GetAdjListNode(int index, LinkedList adjArrGraph);
 	LinkedList& operator [](int start_ver) const;
 	friend ostream& operator<<(ostream& os, Graph& graph);
+	//print graph
+	//print graph
+	void printAllgraph() const;
 
 private:
 	enum eColor { WHITE, GRAY, BLACK };
