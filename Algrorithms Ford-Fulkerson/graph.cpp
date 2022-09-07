@@ -89,11 +89,21 @@ void Graph::AddArc(int start_ver, int end_ver, int capacity)
 
 void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow)
 {
-	int distant = graph[startVertex].head->capacity - flow;
-	if (distant > 0)
-		graph[startVertex].head->flow = distant;
-	else
-		graph[startVertex].head->flow = 0;
+	int oldCapacity = graph[startVertex].head->capacity;
+	int newCapacity =oldCapacity  - flow;
+	if (newCapacity > 0)
+	{
+		if (newCapacity <= oldCapacity)
+			graph[startVertex].head->flow = newCapacity;
+		else
+			graph[startVertex].head->flow = oldCapacity;
+	}
+		
+	else {
+		RemoveArc(startVertex, endVertex);
+		//graph[startVertex].head->flow = 0;
+	}
+		
 }
 
 LinkedList& Graph::operator[](const int start_ver) const

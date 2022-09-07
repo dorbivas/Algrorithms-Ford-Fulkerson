@@ -15,13 +15,17 @@ int ExeSolution::runProgram()
 			throw e;
 		}
 		else {
+			//Graph* copyGraph = new Graph(graph);//COPY CONSTRUCTOR
 			int maxFlow=0;
-			auto maxFlowBfs = getMaxFlow(*graph, sourceSink[0], sourceSink[1]);
+			auto maxFlowBfs = getMaxFlow(*graph, sourceSink[0], sourceSink[1],false);
 			cout << "BFS Method:" << endl;
 			cout << "Max flow = " << maxFlowBfs << endl;
-			auto maxFlowDji = getMaxFlow(*graph, sourceSink[0], sourceSink[1]);
+			//TODO MINCUT
+			
+			/*auto maxFlowDji = getMaxFlow(*copyGraph, sourceSink[0], sourceSink[1], true);
 			cout << "Greedy Method:" << endl;
-		//	cout << "Max flow = " << maxFlowDji << endl;
+			cout << "Max flow = " << maxFlowDji << endl;*/
+			//TODO MINCUT
 			return 0;
 		}
 	}
@@ -63,7 +67,7 @@ int* ExeSolution::readData()
 	}
 
 	while (s <= 0) {
-		cout << "Enter v1\n";
+		cout << "Enter s\n";
 		cin >> s;
 	}
 
@@ -71,20 +75,29 @@ int* ExeSolution::readData()
 		cout << "Enter t\n";
 		cin >> t;
 	}
-	sourceSink[0] = s-1;
-	sourceSink[1] = t-1;
-
-	for (int i = 0; i < numOfArcs; i++)
+	if(s==t)
 	{
-		int v1 = 0, v2 = 0, capacity = 0;
-		cout << "Enter v1, v2, capacity\n";
-		cin >> v1 >> v2 >> capacity;
-		//TODO EXCEPTION- >0
-		edgesArrInput.push_back(graphArc(v1-1, v2-1, capacity));
+		ProgramException e;
+		e.isConnected = false;
+		throw e;
 	}
-		
-	createGraphFromInput(numOfVertices, numOfArcs, edgesArrInput);
-	return sourceSink;
+	else
+	{
+		sourceSink[0] = s - 1;
+		sourceSink[1] = t - 1;
+
+		for (int i = 0; i < numOfArcs; i++)
+		{
+			int v1 = 0, v2 = 0, capacity = 0;
+			cout << "Enter v1, v2, capacity\n";
+			cin >> v1 >> v2 >> capacity;
+			//TODO EXCEPTION- >0
+			edgesArrInput.push_back(graphArc(v1 - 1, v2 - 1, capacity));
+		}
+
+		createGraphFromInput(numOfVertices, numOfArcs, edgesArrInput);
+		return sourceSink;
+	}
 	
 }
 
@@ -101,74 +114,56 @@ void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsA
 
 }
 
-//int ExeSolution::getMaxFlow(int source, int sink, int parent[], int path[], int pathCapacity[], int pathFlow[], int pathFlowIndex[])
-//{
-//	int maxFlow = 0;
-//	while (BFS(source, sink, parent))
-//	{
-//		int pathFlow = INT_MAX;
-//		for (int i = sink; i != source; i = parent[i])
-//		{
-//			pathFlow = min(pathFlow, pathCapacity[i]); 
-//		}
-//		for (int i = sink; i != source; i = parent[i])
-//		{
-//			pathFlowIndex[i] += pathFlow;
-//			pathFlowIndex[parent[i]] -= pathFlow;
-//		}
-//		maxFlow += pathFlow;
-//	}
-//	return maxFlow;
-//}
-
-int ExeSolution::getMaxFlow(Graph& graph, int source, int sink)
+int ExeSolution::getMaxFlow(Graph& graph, int source, int sink,bool isItGreedyMethod)//TODO COMMON FUNCTION
 {
 	int maxFlow = 0;
 	vector<int> parent(graph.vertixAmount);
-	while (BFS(source, sink, parent))
-	{
-		int pathFlow = INT_MAX;
-		for (int i = sink; i != source; i = parent[i])
+	if (isItGreedyMethod) {
+		while (Djikstra(graph, source, sink, parent))
 		{
-			pathFlow = min(pathFlow, graph[parent[i]].head[i].capacity); 
-		}
-		for (int i = sink; i != source; i = parent[i])
-		{
-			graph.IncreaseArcFlow(i, parent[i], pathFlow);
-			
-			if (graph.ArcExists(parent[i],  i)	)
+			int pathFlow = INT_MAX;
+			for (int i = sink; i != source; i = parent[i])
+			{
+				pathFlow = min(pathFlow, graph.GetAdjList(parent[i]).head->capacity);
+			}
+			for (int i = sink; i != source; i = parent[i])
+			{
 				graph.IncreaseArcFlow(parent[i], i, pathFlow);
-			else
-				graph.AddArc(parent[i],  i, pathFlow);
+
+				if (graph.ArcExists(i, parent[i]))
+					graph.IncreaseArcFlow(parent[i], i, -pathFlow);
+				else
+					graph.AddArc(i, parent[i], pathFlow);
+			}
+			maxFlow += pathFlow;
 		}
-		maxFlow += pathFlow;
+	}
+	else
+	{
+		while (BFS(source, sink, parent))
+		{
+			int pathFlow = INT_MAX;
+			for (int i = sink; i != source; i = parent[i])
+			{
+				pathFlow = min(pathFlow, graph.GetAdjList(parent[i]).head->capacity);
+			}
+			for (int i = sink; i != source; i = parent[i])
+			{
+				graph.IncreaseArcFlow(parent[i], i, pathFlow);
+
+				if (graph.ArcExists(i, parent[i]))
+					graph.IncreaseArcFlow(parent[i], i, -pathFlow);
+				else
+					graph.AddArc(i, parent[i], pathFlow);
+			}
+			maxFlow += pathFlow;
+		}
+		
 	}
 	return maxFlow;
+	
 }
 
-//int ExeSolution::FordFulkerson(Graph& graph, int source, int sink) { //TODO
-
-//	int* parent = new int[graph.vertixAmount];
-//	int* path=new int[graph.vertixAmount];
-//	int* pathCapacity = new int[graph.vertixAmount];
-//	int* pathFlow = new int[graph.vertixAmount];
-//	int* pathFlowIndex = new int[graph.vertixAmount];
-//	for (int i = 0; i < graph.vertixAmount; i++)
-//	{
-//		parent[i] = -1;
-//		path[i] = -1;
-//		pathCapacity[i] = graph[i].head->capacity;
-//		pathFlow[i] = 0;
-//		pathFlowIndex[i] = 0;
-//	}
-//	/*delete parent;
-//	delete path;
-//	delete pathCapacity;
-//	delete pathFlow;
-//	delete pathFlowIndex;*/
-	
-//	return getMaxFlow(source-1, sink-1, parent, path, pathCapacity, pathFlow, pathFlowIndex);
-//}
 
 bool ExeSolution::BFS(int source, int sink, vector<int>& parent)
 {
@@ -201,7 +196,7 @@ bool ExeSolution::BFS(int source, int sink, vector<int>& parent)
 	return visited[sink];
 }
 
-bool ExeSolution::Djikstra(Graph& graph, int source, int sink, int parent[])
+bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& parent)
 {
 	Heap Q(graph.vertixAmount);
 	vector<int> capacitys(graph.vertixAmount); //Weight array
@@ -219,7 +214,7 @@ bool ExeSolution::Djikstra(Graph& graph, int source, int sink, int parent[])
 		Node* currNode = this->graph->GetAdjList(u).head;
 		while (currNode != nullptr)
 		{
-			if (capacitys[currNode->nodeId] > capacitys[u] + currNode->capacity)//todo <
+			if (capacitys[currNode->nodeId] < capacitys[u] + currNode->capacity)//todo <
 			{
 				capacitys[currNode->nodeId] = capacitys[u] + currNode->capacity;
 				parent[currNode->nodeId] = u;
