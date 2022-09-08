@@ -2,11 +2,11 @@
 
 int ExeSolution::runProgram()
 {
-
+	
 	try
 	{
-		int* sourceSink = readData();
-
+		
+		readData();
 		if (!graph->IsConnectedVisit())
 		{
 			ProgramException e;
@@ -15,17 +15,20 @@ int ExeSolution::runProgram()
 			throw e;
 		}
 		else {
-			//Graph* copyGraph = new Graph(graph);//COPY CONSTRUCTOR
 			int maxFlow = 0;
-			auto maxFlowBfs = getMaxFlow(*graph, sourceSink[0], sourceSink[1], false);
+			auto maxFlowBfs = getMaxFlow(*graph, S, T, false);
 			cout << "BFS Method:" << endl;
 			cout << "Max flow = " << maxFlowBfs << endl;
-			//TODO MINCUT
+			findMinCut(*graph, S, T);
+			
 
-			/*auto maxFlowDji = getMaxFlow(*copyGraph, sourceSink[0], sourceSink[1], true);
+			auto maxFlowDji = getMaxFlow(*djGraph, S, T, true);
 			cout << "Greedy Method:" << endl;
-			cout << "Max flow = " << maxFlowDji << endl;*/
-			//TODO MINCUT
+			cout << "Max flow = " << maxFlowDji << endl;
+			findMinCut(*djGraph, S, T);
+
+
+			
 			return 0;
 		}
 	}
@@ -50,10 +53,9 @@ ExeSolution::~ExeSolution()
 	delete graph;
 }
 
-int* ExeSolution::readData()
+void ExeSolution::readData()
 {
 	int numOfVertices = 0, numOfArcs = 0, s = 0, t = 0;
-	int sourceSink[2];
 	vector<graphArc> edgesArrInput; // data meberm
 
 	while (numOfVertices <= 0) {
@@ -83,8 +85,8 @@ int* ExeSolution::readData()
 	}
 	else
 	{
-		sourceSink[0] = s - 1;
-		sourceSink[1] = t - 1;
+		S = s - 1;
+		T = t - 1;
 
 		for (int i = 0; i < numOfArcs; i++)
 		{
@@ -96,7 +98,6 @@ int* ExeSolution::readData()
 		}
 
 		createGraphFromInput(numOfVertices, numOfArcs, edgesArrInput);
-		return sourceSink;
 	}
 
 }
@@ -104,12 +105,15 @@ int* ExeSolution::readData()
 void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsAmount, const vector<graphArc>& edgesArrInput)
 {
 	graph = new Graph(vertixAmount);
+	djGraph= new Graph(vertixAmount);
+
 	graph->vertixAmount = vertixAmount;
 
 	for (int i = 0; i < arcsAmount; i++)
 	{
 		graphArc arc = edgesArrInput[i];
 		graph->AddArc(edgesArrInput[i].startVertex, edgesArrInput[i].endVertex, edgesArrInput[i].capacity);
+		djGraph->AddArc(edgesArrInput[i].startVertex, edgesArrInput[i].endVertex, edgesArrInput[i].capacity);
 	}
 
 }
@@ -152,7 +156,7 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyM
 				graph.IncreaseArcFlow(parent[i], i, pathFlow);
 
 				if (graph.ArcExists(i, parent[i]))
-					graph.IncreaseArcFlow(parent[i], i, pathFlow);
+					graph.IncreaseArcFlow(parent[i], i, -pathFlow);
 				else
 					graph.AddArc(i, parent[i], pathFlow);
 			}
@@ -163,6 +167,39 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyM
 	}
 	return maxFlow;
 
+}
+void ExeSolution::findMinCut(Graph& graph, int source, int sink)
+{
+	vector<int> parent(graph.vertixAmount);
+	for (int i = 0; i < graph.vertixAmount; i++) {
+		parent[i] = -1;
+		
+	}
+	BFS(source, sink, parent);
+	vector<int> minCut_S, minCut_T;
+	minCut_S.push_back(source + 1);
+	for (int i = 1; i < graph.vertixAmount; i++)
+	{
+		if (parent[i] != -1)
+		{
+			minCut_S.push_back(i+1);
+		}
+		else
+		{
+			minCut_T.push_back(i+1);
+		}
+	}
+	cout << "Min cut:S= ";
+	for (auto i : minCut_S)
+	{
+		cout << i<< ", ";
+	}
+	cout << "T:";
+	for (auto i : minCut_T)
+	{
+		cout << i << ", ";
+	}
+	cout << endl;
 }
 
 
@@ -215,7 +252,7 @@ bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& pare
 		Node* currNode = this->graph->GetAdjList(u).head;
 		while (currNode != nullptr)
 		{
-			if (capacitys[currNode->nodeId] < capacitys[u] + currNode->capacity)//todo <
+			if (capacitys[currNode->nodeId] > capacitys[u] + currNode->capacity)//TODO CHANGE -1
 			{
 				capacitys[currNode->nodeId] = capacitys[u] + currNode->capacity;
 				parent[currNode->nodeId] = u;

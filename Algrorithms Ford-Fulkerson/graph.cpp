@@ -87,21 +87,22 @@ void Graph::AddArc(int start_ver, int end_ver, int capacity)
 	}
 }
 
-void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow)
+void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow)//TODO DELTE COMMENT
 {
 	int oldCapacity = graph[startVertex].head->capacity;
 	int newCapacity =oldCapacity  - flow;
 	if (newCapacity > 0)
 	{
-		if (newCapacity <= oldCapacity)
+		//if (newCapacity <= oldCapacity) {
+			graph[startVertex].head->capacity = newCapacity;
 			graph[startVertex].head->flow = newCapacity;
-		else
-			graph[startVertex].head->flow = oldCapacity;
+		//}
+		/*else
+			graph[startVertex].head->flow = oldCapacity;*///TODO PROBABLY DELETE
 	}
 		
 	else {
 		RemoveArc(startVertex, endVertex);
-		//graph[startVertex].head->flow = 0;
 	}
 		
 }
@@ -203,7 +204,7 @@ void Graph::printAllgraph() const
 		Node* currNode = graph[i].head;
 		while (currNode != nullptr)
 		{
-			cout << "Start vertex: " << i << " End vertex: " << currNode->nodeId << " Flow: " << currNode->flow << endl;
+			cout << "Start vertex: " << i << " End vertex: " << currNode->nodeId << " Flow: " << currNode->capacity << endl;
 			currNode = currNode->next;
 		}
 	}
