@@ -74,17 +74,18 @@ void Graph::MakeEmptyGraph()
 	FLAG_INIT = true;
 }
 
-void Graph::AddArc(int start_ver, int end_ver, int capacity)
+void Graph::AddArc(int start_ver, int end_ver, int capacity,bool toAddEdge)
 {
-	if (ArcExists(start_ver, end_ver) == true)
+	/*if (ArcExists(start_ver, end_ver) == true)
 	{
 		throw ProgramException();
 	}
 	else
-	{
+	{*/
 		graph[start_ver].InsertHead(end_ver, capacity);
+
 		++edgesAmount;
-	}
+	//}
 }
 
 void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow)//TODO DELTE COMMENT

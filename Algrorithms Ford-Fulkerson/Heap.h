@@ -11,7 +11,7 @@ class Heap {
 public:
 	struct HeapNode
 	{
-		unsigned int weight;
+		int weight;
 		unsigned int nodeId;
 	};
 

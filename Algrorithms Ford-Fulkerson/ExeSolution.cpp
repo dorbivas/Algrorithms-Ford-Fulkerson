@@ -112,8 +112,10 @@ void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsA
 	for (int i = 0; i < arcsAmount; i++)
 	{
 		graphArc arc = edgesArrInput[i];
-		graph->AddArc(edgesArrInput[i].startVertex, edgesArrInput[i].endVertex, edgesArrInput[i].capacity);
-		djGraph->AddArc(edgesArrInput[i].startVertex, edgesArrInput[i].endVertex, edgesArrInput[i].capacity);
+		graph->AddArc(edgesArrInput[i].startVertex, edgesArrInput[i].endVertex, edgesArrInput[i].capacity,true);
+		djGraph->AddArc(edgesArrInput[i].startVertex, edgesArrInput[i].endVertex, edgesArrInput[i].capacity,true);
+		graph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0,false);
+		djGraph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0,false);
 	}
 
 }
@@ -137,7 +139,7 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyM
 				if (graph.ArcExists(i, parent[i]))
 					graph.IncreaseArcFlow(parent[i], i, -pathFlow);
 				else
-					graph.AddArc(i, parent[i], pathFlow);
+					graph.AddArc(i, parent[i], pathFlow,false);
 			}
 			maxFlow += pathFlow;
 		}
@@ -158,10 +160,10 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyM
 				if (graph.ArcExists(i, parent[i]))
 					graph.IncreaseArcFlow(parent[i], i, -pathFlow);
 				else
-					graph.AddArc(i, parent[i], pathFlow);
+					graph.AddArc(i, parent[i], pathFlow,false);
 			}
 			maxFlow += pathFlow;
-			graph.printAllgraph();
+			//graph.printAllgraph();
 		}
 
 	}
@@ -234,6 +236,7 @@ bool ExeSolution::BFS(int source, int sink, vector<int>& parent)
 	return visited[sink];
 }
 
+
 bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& parent)
 {
 	Heap Q(graph.vertixAmount);
@@ -252,7 +255,7 @@ bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& pare
 		Node* currNode = this->graph->GetAdjList(u).head;
 		while (currNode != nullptr)
 		{
-			if (capacitys[currNode->nodeId] > capacitys[u] + currNode->capacity)//TODO CHANGE -1
+			if ((capacitys[currNode->nodeId] < capacitys[u] + currNode->capacity) && currNode->capacity > 0)//TODO > INSTEAD <
 			{
 				capacitys[currNode->nodeId] = capacitys[u] + currNode->capacity;
 				parent[currNode->nodeId] = u;
