@@ -115,55 +115,39 @@ void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsA
 
 }
 
-int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyMethod)//TODO COMMON FUNCTION
+int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyMethod)
 {
 	int maxFlow = 0;
 	vector<int> parent(graph.vertixAmount);
-	if (isItGreedyMethod) {
-		while (Djikstra(graph, source, sink, parent))
-		{
-			int pathFlow = INT_MAX;
-			for (int i = sink; i != source; i = parent[i])
-			{
-				pathFlow = min(pathFlow, graph.GetAdjList(parent[i]).head->capacity);
-			}
-			for (int i = sink; i != source; i = parent[i])
-			{
-				graph.IncreaseArcFlow(parent[i], i, pathFlow);
+	int pathFlow = INT_MAX;
+	int u = source;
 
-				if (graph.ArcExists(i, parent[i]))
-					graph.IncreaseArcFlow(parent[i], i, -pathFlow);
-				else
-					graph.AddArc(i, parent[i], pathFlow, false);
-			}
-			maxFlow += pathFlow;
+	while (true) {
+		if (isItGreedyMethod) {
+			if (!Djikstra(graph, source, sink, parent))
+				break;
 		}
-	}
-	else
-	{
-		while (BFS(source, sink, parent))
-		{
-			int pathFlow = INT_MAX;
-			for (int i = sink; i != source; i = parent[i])
-			{
-				pathFlow = min(pathFlow, graph.GetAdjList(parent[i]).head->capacity);
-			}
-			for (int i = sink; i != source; i = parent[i])
-			{
-				graph.IncreaseArcFlow(parent[i], i, pathFlow);
-
-				if (graph.ArcExists(i, parent[i]))
-					graph.IncreaseArcFlow(parent[i], i, -pathFlow);
-				else
-					graph.AddArc(i, parent[i], pathFlow, false);
-			}
-			maxFlow += pathFlow;
-			//graph.printAllgraph();
+		else {
+			if (!BFS(source, sink, parent))
+				break;
 		}
 
+
+		for (int v = sink; v != source; v = parent[v])
+		{
+			u = parent[v];
+			pathFlow = min(pathFlow, graph[u].find(v)->capacity);// graph.GetAdjList(parent[v]).head->capacity);
+		}
+		for (int v = sink; v != source; v = parent[v])
+		{
+			u = parent[v];
+			graph.IncreaseArcFlow(u, v, pathFlow, false);//u->v,  false=forward
+			graph.IncreaseArcFlow(v, u, -pathFlow, true);//v->u,  true=opposite edge
+
+		}
+		maxFlow += pathFlow;
 	}
 	return maxFlow;
-
 }
 void ExeSolution::findMinCut(Graph& graph, int source, int sink)
 {
@@ -252,7 +236,7 @@ bool ExeSolution::BFS(int source, int sink, vector<int>& parent)
 
 bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& parent)
 {
-	Heap Q(graph.vertixAmount);
+	Heap Q(this->djGraph->vertixAmountt);
 	vector<int> capacitys(graph.vertixAmount); //Weight array
 
 	for (int i = 0; i < graph.vertixAmount; i++)
@@ -265,10 +249,10 @@ bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& pare
 	while (!Q.IsEmpty())
 	{
 		int u = Q.DeleteMin();
-		Node* currNode = this->graph->GetAdjList(u).head;
+		Node* currNode = this->djGraph->GetAdjList(u).head;
 		while (currNode != nullptr)
 		{
-			if ((capacitys[currNode->nodeId] < capacitys[u] + currNode->capacity) && currNode->capacity > 0)//TODO > INSTEAD <
+			if ((capacitys[currNode->nodeId] > capacitys[u] + currNode->capacity) && currNode->capacity > 0)//TODO > INSTEAD <
 			{
 				capacitys[currNode->nodeId] = capacitys[u] + currNode->capacity;
 				parent[currNode->nodeId] = u;

@@ -76,32 +76,24 @@ void Graph::MakeEmptyGraph()
 
 void Graph::AddArc(int start_ver, int end_ver, int capacity,bool toAddEdge)
 {
-	/*if (ArcExists(start_ver, end_ver) == true)
-	{
-		throw ProgramException();
-	}
-	else
-	{*/
 		graph[start_ver].InsertHead(end_ver, capacity);
-
 		++edgesAmount;
-	//}
 }
 
-void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow)//TODO DELTE COMMENT
+void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow,bool opposite)//TODO DELTE COMMENT
 {
-	int oldCapacity = graph[startVertex].head->capacity;
+	int oldCapacity=graph[startVertex].find(endVertex)->capacity;
+	//int oldCapacity = graph[startVertex].head->capacity;
 	int newCapacity =oldCapacity  - flow;
 	if (newCapacity > 0)
 	{
-		//if (newCapacity <= oldCapacity) {
-			graph[startVertex].head->capacity = newCapacity;
-			graph[startVertex].head->flow = newCapacity;
-		//}
-		/*else
-			graph[startVertex].head->flow = oldCapacity;*///TODO PROBABLY DELETE
-	}
+		//graph[startVertex].head->capacity = newCapacity;
+		//graph[startVertex].head->flow = newCapacity;
+		graph[startVertex].find(endVertex)->capacity = newCapacity;
+		graph[startVertex].find(endVertex)->flow = newCapacity;
 		
+	
+	}	
 	else {
 		RemoveArc(startVertex, endVertex);
 	}
@@ -118,23 +110,12 @@ bool Graph::RemoveArc(const int startVer, const int endVer)
 	bool status = true;
 	if (this->graph != nullptr)
 	{
-		if (ArcExists(startVer, endVer) == true)
-		{
-			status |= graph[startVer].RemoveNode(endVer);
-			if (status) {
-				status |= graph[endVer].RemoveNode(startVer);
-				if (status)
-					--edgesAmount;
-				else
-					throw "system fail";
-			}
-			else
-				throw "system fail";
+		status |= graph[startVer].RemoveNode(endVer);
+		if (status) {
+			--edgesAmount;
 		}
-		else {
-			status = false;
-			throw ProgramException();
-		}
+		else
+			throw "system fail";
 	}
 	else
 		status = false;

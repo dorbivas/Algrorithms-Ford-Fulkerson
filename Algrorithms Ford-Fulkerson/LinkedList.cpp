@@ -22,20 +22,44 @@ bool LinkedList::IsEmpty() const
 void LinkedList::InsertHead(const int index, const int capacity)
 {
 	//Create new node
-	Node* temp1 = new Node;
-	temp1->nodeId = index;
-	temp1->capacity = capacity;
-	temp1->next = nullptr;
+	Node* newNode = new Node;
+	newNode->nodeId = index;
+	newNode->capacity = capacity;
+	newNode->flow = 0;
+	newNode->next = nullptr;
 	
-	if (IsEmpty())
+	if (IsEmpty())//insert head
 	{
-		head = temp1;
-		tail = temp1;
+		head = newNode;
+		tail = newNode;
 	}
 	else {
-		temp1->next = head;
-		tail = head;
-		head = temp1;
+		Node* curr = head;
+		Node* prev = head;
+		if (newNode->nodeId < head->nodeId) 
+			{
+				newNode->next = head;
+				head = newNode;
+			}
+		else {
+			while (curr != nullptr && curr->nodeId  < newNode->nodeId)
+			{
+				prev = curr;
+				curr = curr->next;
+			}
+			/*if (prev == head)
+				head->next = newNode;*/
+			if (curr == nullptr)//insert tail
+			{
+				prev->next = newNode;
+				tail = newNode;
+				tail->next = curr;
+			}
+			else {
+				newNode->next = curr;
+				prev->next = newNode;
+			}
+		}
 	}
 	++size;
 }
