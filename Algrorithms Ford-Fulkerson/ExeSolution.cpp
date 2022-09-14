@@ -7,10 +7,10 @@ int ExeSolution::runProgram()
 		readData();
 		if (!graph->IsConnectedVisit())
 		{
-			ProgramException e;
-			e.isConnected = false;
+			//ProgramException e;
+			//e.isConnected = false;
 
-			throw e;
+			//throw e;
 		}
 		else {
 			int maxFlow = 0;
@@ -27,12 +27,12 @@ int ExeSolution::runProgram()
 			return 0;
 		}
 	}
-	catch (ProgramException e)
+	catch (exception e)
 	{
-		if (!e.isConnected)
-		{
+		//if (!e.isConnected)
+		//{
 			cout << "The graph is not connected\n";
-		}
+	//	}
 		return 0;
 	}
 	catch (...)
@@ -49,35 +49,32 @@ ExeSolution::~ExeSolution()
 
 void ExeSolution::readData()
 {
-	int numOfVertices = 0, numOfArcs = 0, s = 0, t = 0;
-	vector<graphArc> edgesArrInput; //TODO data meberm
+	int numOfVertices = 0;
+	int numOfArcs = 0;
+	int s = 0;
+	int t = 0;
+	vector<graphArc> edgesArrInput;
+	bool isValid = false;
 
-	while (numOfVertices <= 0) {
-		cout << "Enter the number of vertices in the graph\n";
-		cin >> numOfVertices;//TODO EXCEPTION
-	}
-
-	while (numOfArcs <= 0) {
-		cout << "Enter the number of arcs in the graph\n";
-		cin >> numOfArcs;//TODO EXCEPTION
-	}
-
-	while (s <= 0) {
-		cout << "Enter s\n";
-		cin >> s;
-	}
-
-	while (t <= 0) {
-		cout << "Enter t\n";
-		cin >> t;
-	}
-	if (s == t)
+	cout << "Enter number of vertices: \n";
+	cin >> numOfVertices;
+	cout << "Enter number of arcs: \n";
+	cin >> numOfArcs;
+	cout << "Enter source vertex: \n";
+	cin >> s;
+	cout << "Enter sink vertex: \n";
+	cin >> t;
+	if (numOfVertices > 0 && numOfArcs > 0 && s >= 0 && t >= 0 && s <= numOfVertices && t <= numOfVertices && s != t)
 	{
-		ProgramException e;
-		e.isConnected = false;
-		throw e;
+		isValid = true;
 	}
 	else
+	{
+		cout << "Invalid input. Try again." << endl;
+		exit(1);
+	}
+
+	if (isValid)
 	{
 		S = s - 1;
 		T = t - 1;
@@ -87,13 +84,19 @@ void ExeSolution::readData()
 			int v1 = 0, v2 = 0, capacity = 0;
 			cout << "Enter v1, v2, capacity\n";
 			cin >> v1 >> v2 >> capacity;
-			//TODO EXCEPTION- >0
-			edgesArrInput.push_back(graphArc(v1 - 1, v2 - 1, capacity));
+			//Check is v1 and v2 are in range
+			if (v1 >= 1 && v1 <= numOfVertices && v2 >= 1 && v2 <= numOfVertices && capacity > 0 && v1 != v2)
+			{
+				edgesArrInput.push_back({ v1 - 1, v2 - 1, capacity });
+			}
+			else
+			{
+				cout << "Invalid input. Try again." << endl;
+				exit(1);
+			}
 		}
-
 		createGraphFromInput(numOfVertices, numOfArcs, edgesArrInput);
 	}
-
 }
 
 void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsAmount, const vector<graphArc>& edgesArrInput)
@@ -106,12 +109,20 @@ void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsA
 	for (int i = 0; i < arcsAmount; i++)
 	{
 		graphArc arc = edgesArrInput[i];
-		graph->AddArc(edgesArrInput[i].startVertex, edgesArrInput[i].endVertex, edgesArrInput[i].capacity, true);
-		djGraph->AddArc(edgesArrInput[i].startVertex, edgesArrInput[i].endVertex, edgesArrInput[i].capacity, true);
-		graph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
-		djGraph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
+		//check if arc exist in graph
+		if (false)//graph->ArcExists(arc.startVertex, arc.endVertex)) // TODO 
+		{
+			cout << "Arc already exist. Try again." << endl;
+			exit(1);
+		}
+		else
+		{
+			graph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
+			djGraph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
+			graph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
+			djGraph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
+		}
 	}
-
 }
 
 int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyMethod)
