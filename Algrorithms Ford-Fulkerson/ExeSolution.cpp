@@ -233,34 +233,34 @@ bool ExeSolution::BFS(int source, int sink, vector<int>& parent)
 	return visited[sink];
 }
 
-
-bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& parent)
-{
-	Heap Q(this->djGraph->vertixAmountt);
-	vector<int> capacitys(graph.vertixAmount); //Weight array
-
-	for (int i = 0; i < graph.vertixAmount; i++)
-	{
-		capacitys[i] = INT_MAX;
-	}
-	capacitys[source] = 0;
-	Q.Build(capacitys);
-
-	while (!Q.IsEmpty())
-	{
-		int u = Q.DeleteMin();
-		Node* currNode = this->djGraph->GetAdjList(u).head;
+bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& parent) {
+	priority_queue<int> Q;
+	vector<int> dist(graph.vertixAmount, INT_MAX);
+	vector<bool> visited(graph.vertixAmount, false);
+	Q.push(source);
+	dist[source] = 0;
+	parent[source] = -1;
+	while (!Q.empty()) {
+		int u = Q.top();
+		Q.pop();
+		if (visited[u]) continue;
+		visited[u] = true;
+		Node* currNode = graph.GetAdjList(u).head;
 		while (currNode != nullptr)
 		{
-			if ((capacitys[currNode->nodeId] > capacitys[u] + currNode->capacity) && currNode->capacity > 0)//TODO > INSTEAD <
+			if (!visited[currNode->nodeId] && currNode->capacity > 0)
 			{
-				capacitys[currNode->nodeId] = capacitys[u] + currNode->capacity;
-				parent[currNode->nodeId] = u;
-				Q.DecreaseKey(currNode->nodeId, capacitys[currNode->nodeId]);
+				int v = currNode->nodeId;
+				int weight = currNode->capacity;
+				if (dist[v] > dist[u] + weight) {
+					dist[v] = dist[u] + weight;
+					parent[v] = u;
+					Q.push(v);
+				}
 			}
 			currNode = currNode->next;
 		}
 	}
-	return capacitys[sink] != INT_MAX;
+	return visited[sink];
 }
 

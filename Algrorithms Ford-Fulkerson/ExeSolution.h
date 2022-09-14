@@ -4,7 +4,9 @@
 #include <string>
 #include <queue>
 #include "graph.h"
-#include "Heap.h"
+#include <queue>
+
+using std::priority_queue;
 
 class ExeSolution
 {
