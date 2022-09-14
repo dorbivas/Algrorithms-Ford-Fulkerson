@@ -2,9 +2,7 @@
 #include "ProgramException.h"
 
 using namespace std;
-//if tree is connected, all neighbors should be visited eventually, since we know it has no cycles,
 //we can ensure if all nodes were visited they finish black eventually.
-
 Graph::~Graph()
 {
 	delete[] graph;
