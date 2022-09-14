@@ -117,10 +117,15 @@ void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsA
 		}
 		else
 		{
-			//check if arc exist and if its capacity is worth zero
-			auto curr = graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity;
-			if (graph->ArcExists(arc.startVertex, arc.endVertex) && curr == 0)
-				curr = arc.capacity;
+			//check if arc exist and if its capacity is worth zero 
+			bool curr = graph->ArcExists(arc.startVertex, arc.endVertex);
+			if (curr && graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity == 0)
+				graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity = arc.capacity;
+			else if (curr && graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity != 0)
+			{
+				cout << "Arc already exist. Try again." << endl;
+				exit(1);
+			}
 
 			if (!graph->ArcExists(arc.startVertex, arc.endVertex))
 				graph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
@@ -128,9 +133,21 @@ void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsA
 			if (!graph->ArcExists(arc.endVertex, arc.startVertex))
 				graph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
 
+			bool currDji = djGraph->ArcExists(arc.startVertex, arc.endVertex);
+			if (curr && djGraph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity == 0)
+				djGraph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity = arc.capacity;
+			else if (curr && djGraph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity != 0)
+			{
+				cout << "Arc already exist. Try again." << endl;
+				exit(1);
+			}
 
-			djGraph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
-			djGraph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
+			if (!djGraph->ArcExists(arc.startVertex, arc.endVertex))
+				djGraph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
+
+			if (!djGraph->ArcExists(arc.endVertex, arc.startVertex))
+				djGraph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
+			
 		}
 	}
 }
