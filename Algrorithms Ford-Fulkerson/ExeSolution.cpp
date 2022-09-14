@@ -31,7 +31,6 @@ int ExeSolution::runProgram()
 	{
 		if (!e.isConnected)
 		{
-			cout << e.what() << endl;
 			cout << "The graph is not connected\n";
 		}
 		return 0;
@@ -119,7 +118,7 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyM
 {
 	int maxFlow = 0;
 	vector<int> parent(graph.vertixAmount);
-	int pathFlow = INT_MAX;
+	int pathFlow = INT8_MAX;
 	int u = source;
 
 	while (true) {
@@ -235,7 +234,7 @@ bool ExeSolution::BFS(int source, int sink, vector<int>& parent)
 
 bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& parent) {
 	priority_queue<int> Q;
-	vector<int> dist(graph.vertixAmount, INT_MAX);
+	vector<int> dist(graph.vertixAmount, -INT8_MAX);
 	vector<bool> visited(graph.vertixAmount, false);
 	Q.push(source);
 	dist[source] = 0;
@@ -252,7 +251,7 @@ bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& pare
 			{
 				int v = currNode->nodeId;
 				int weight = currNode->capacity;
-				if (dist[v] > dist[u] + weight) {
+				if (dist[v] < dist[u] + weight) {
 					dist[v] = dist[u] + weight;
 					parent[v] = u;
 					Q.push(v);

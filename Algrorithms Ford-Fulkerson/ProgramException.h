@@ -8,6 +8,6 @@ class ProgramException : exception {
 public:
     bool isConnected = true;
     ProgramException() : s_invalidInput("invalid input"), exception("invalid input") { ; }
-    const char* what() const override { return s_invalidInput.c_str(); }
+    //const char* what() const override { return s_invalidInput.c_str(); }
 };
 

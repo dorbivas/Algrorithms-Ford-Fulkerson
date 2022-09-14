@@ -4,7 +4,6 @@
 #include <string>
 #include <queue>
 #include "graph.h"
-#include <queue>
 
 using std::priority_queue;
 
@@ -22,9 +21,7 @@ private:
 
 	void createGraphFromInput(const int& vertixAmount, const int& arcsAmount, const vector<graphArc>& edgesArrInput);
 	void readData();
-	//int FordFulkerson(Graph& graph, int source, int sink);
 	int getMaxFlow(Graph& graph,int source, int sink, bool isItGreedyMethod);
-	//int getMaxFlow(int source, int sink, int parent[], int path[], int pathCapacity[], int pathFlow[], int pathFlowIndex[]);
 	void findMinCut(Graph& graph, int source, int sink);
 	bool Djikstra(Graph& graph, int source, int sink, vector<int>& parent);
 	bool BFS(int source, int sink, vector<int>& parent);
