@@ -4,6 +4,7 @@
 #include <string>
 #include <queue>
 #include "graph.h"
+#include <algorithm>
 
 using std::priority_queue;
 

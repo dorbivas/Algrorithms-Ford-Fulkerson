@@ -161,17 +161,20 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyM
 }
 void ExeSolution::findMinCut(Graph& graph, int source, int sink)
 {
-	vector<int> parent(graph.vertixAmount);
+	vector<int> parent(graph.vertixAmount,-1);
 	vector<int> minCut_S, minCut_T;
 	
-	for (int i = 0; i < graph.vertixAmount; i++) {
+	/*for (int i = 0; i < graph.vertixAmount; i++) {
 		parent[i] = -1;
-	}
+	}*/
 	
 	BFS(source, sink, parent);
 	minCut_S.push_back(source + 1);
-	for (int i = 1; i < graph.vertixAmount; i++)
+	for (int i = 0; i < graph.vertixAmount; i++)
 	{
+		if(i==source)
+			continue;
+		
 		if (parent[i] != -1)
 		{
 			minCut_S.push_back(i + 1);
@@ -181,6 +184,8 @@ void ExeSolution::findMinCut(Graph& graph, int source, int sink)
 			minCut_T.push_back(i + 1);
 		}
 	}
+	sort(minCut_S.begin(), minCut_S.end());
+	sort(minCut_T.begin(), minCut_T.end());
 	
 	cout << "Min cut: S = { ";
 	for (auto i : minCut_S)
