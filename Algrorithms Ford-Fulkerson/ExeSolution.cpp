@@ -1,5 +1,6 @@
 #include "ExeSolution.h"
 
+
 int ExeSolution::runProgram()
 {
 	try
@@ -32,10 +33,12 @@ int ExeSolution::runProgram()
 	}
 }
 
+
 ExeSolution::~ExeSolution()
 {
 	delete graph;
 }
+
 
 void ExeSolution::readData()
 {
@@ -60,7 +63,7 @@ void ExeSolution::readData()
 	}
 	else
 	{
-		cout << "Invalid input. Try again." << endl;
+		cout << "invalid input" << endl;
 		exit(1);
 	}
 
@@ -81,13 +84,15 @@ void ExeSolution::readData()
 			}
 			else
 			{
-				cout << "Invalid input. Try again." << endl;
+				cout << "invalid input" << endl;
 				exit(1);
 			}
 		}
 		createGraphFromInput(numOfVertices, numOfArcs, edgesArrInput);
 	}
 }
+
+
 
 void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsAmount, const vector<graphArc>& edgesArrInput)
 {
@@ -136,6 +141,7 @@ void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsA
 	}
 }
 
+
 int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyMethod)
 {
 	int maxFlow = 0;
@@ -157,7 +163,7 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyM
 		for (int v = sink; v != source; v = parent[v])
 		{
 			u = parent[v];
-			pathFlow = min(pathFlow, graph[u].find(v)->capacity);// graph.GetAdjList(parent[v]).head->capacity);
+			pathFlow = min(pathFlow, graph[u].find(v)->capacity);
 		}
 		for (int v = sink; v != source; v = parent[v])
 		{
@@ -170,6 +176,9 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyM
 	}
 	return maxFlow;
 }
+
+
+
 void ExeSolution::findMinCut(Graph& graph, int source, int sink)
 {
 	vector<int> parent(graph.vertixAmount, -1);
@@ -235,7 +244,7 @@ bool ExeSolution::BFS(int source, int sink, vector<int>& parent)
 	std::queue<int> q;
 	q.push(source);
 	visited[source] = true;
-	parent[source] = -1;
+	parent.at(source) = -1;
 	while (!q.empty())
 	{
 		int curr = q.front();
@@ -256,17 +265,17 @@ bool ExeSolution::BFS(int source, int sink, vector<int>& parent)
 }
 
 bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& parent) {
-	priority_queue<int> Q;
+	std::priority_queue<int> Q;
 	vector<int> dist(graph.vertixAmount, -INT8_MAX);
 	vector<bool> visited(graph.vertixAmount, false);
 	Q.push(source);
-	dist[source] = 0;
-	parent[source] = -1;
+	dist.at(source) = 0;
+	parent.at(source) = -1;
 	while (!Q.empty()) {
 		int u = Q.top();
 		Q.pop();
 		if (visited[u]) continue;
-		visited[u] = true;
+		visited.at(u) = true;
 		Node* currNode = graph.GetAdjList(u).head;
 		while (currNode != nullptr)
 		{
@@ -275,8 +284,8 @@ bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& pare
 				int v = currNode->nodeId;
 				int weight = currNode->capacity;
 				if (dist[v] < dist[u] + weight) {
-					dist[v] = dist[u] + weight;
-					parent[v] = u;
+					dist.at(v) = dist[u] + weight;
+					parent.at(v) = u;
 					Q.push(v);
 				}
 			}
@@ -285,4 +294,3 @@ bool ExeSolution::Djikstra(Graph& graph, int source, int sink, vector<int>& pare
 	}
 	return visited[sink];
 }
-

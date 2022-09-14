@@ -80,11 +80,11 @@ void Graph::AddArc(int startVertex, int endVertex, int capacity, bool toAddEdge)
 
 void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow, bool opposite)//TODO DELTE COMMENT
 {
-	if (!ArcExists(startVertex, endVertex))
-		return;
+	if (!ArcExists(startVertex, endVertex)) {
+		AddArc(startVertex, endVertex, 0, false);
+	}
 
 	int oldCapacity = graph[startVertex].find(endVertex)->capacity;
-	//int oldCapacity = graph[startVertex].head->capacity;
 	int newCapacity = oldCapacity - flow;
 	if (newCapacity > 0)
 	{
