@@ -74,30 +74,30 @@ void Graph::MakeEmptyGraph()
 	FLAG_INIT = true;
 }
 
-void Graph::AddArc(int start_ver, int end_ver, int capacity,bool toAddEdge)
+void Graph::AddArc(int startVertex, int endVertex, int capacity, bool toAddEdge)
 {
-		graph[start_ver].InsertHead(end_ver, capacity);
-		++edgesAmount;
+	graph[startVertex].InsertHead(endVertex, capacity);
+	++edgesAmount;
 }
 
-void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow,bool opposite)//TODO DELTE COMMENT
+void Graph::IncreaseArcFlow(int startVertex, int endVertex, int flow, bool opposite)//TODO DELTE COMMENT
 {
-	int oldCapacity=graph[startVertex].find(endVertex)->capacity;
+	if (!ArcExists(startVertex, endVertex))
+		return;
+
+	int oldCapacity = graph[startVertex].find(endVertex)->capacity;
 	//int oldCapacity = graph[startVertex].head->capacity;
-	int newCapacity =oldCapacity  - flow;
+	int newCapacity = oldCapacity - flow;
 	if (newCapacity > 0)
 	{
 		//graph[startVertex].head->capacity = newCapacity;
 		//graph[startVertex].head->flow = newCapacity;
 		graph[startVertex].find(endVertex)->capacity = newCapacity;
 		graph[startVertex].find(endVertex)->flow = newCapacity;
-		
-	
-	}	
+	}
 	else {
 		RemoveArc(startVertex, endVertex);
 	}
-		
 }
 
 LinkedList& Graph::operator[](const int start_ver) const

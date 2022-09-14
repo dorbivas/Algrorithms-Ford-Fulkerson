@@ -5,34 +5,24 @@ int ExeSolution::runProgram()
 	try
 	{
 		readData();
-		if (!graph->IsConnectedVisit())
-		{
-			//ProgramException e;
-			//e.isConnected = false;
 
-			//throw e;
-		}
-		else {
-			int maxFlow = 0;
-			auto maxFlowBfs = getMaxFlow(*graph, S, T, false);
-			cout << "BFS Method:" << endl;
-			cout << "Max flow = " << maxFlowBfs << endl;
-			findMinCut(*graph, S, T);
+		int maxFlow = 0;
+		auto maxFlowBfs = getMaxFlow(*graph, S, T, false);
+		cout << "BFS Method:" << endl;
+		cout << "Max flow = " << maxFlowBfs << endl;
+		findMinCut(*graph, S, T);
 
-			auto maxFlowDji = getMaxFlow(*djGraph, S, T, true);
-			cout << "Greedy Method:" << endl;
-			cout << "Max flow = " << maxFlowDji << endl;
-			findMinCut(*djGraph, S, T);
-			
-			return 0;
-		}
+		auto maxFlowDji = getMaxFlow(*djGraph, S, T, true);
+		cout << "Greedy Method:" << endl;
+		cout << "Max flow = " << maxFlowDji << endl;
+		findMinCut(*djGraph, S, T);
+
+		return 0;
+
 	}
 	catch (exception e)
 	{
-		//if (!e.isConnected)
-		//{
-			cout << "The graph is not connected\n";
-	//	}
+		cout << "error:\n" << e.what() << endl;
 		return 0;
 	}
 	catch (...)
@@ -105,50 +95,44 @@ void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsA
 	djGraph = new Graph(vertixAmount);
 
 	graph->vertixAmount = vertixAmount;
+	djGraph->vertixAmount = vertixAmount;
 
 	for (int i = 0; i < arcsAmount; i++)
 	{
 		graphArc arc = edgesArrInput[i];
-		//check if arc exist in graph
-		if (false)//graph->ArcExists(arc.startVertex, arc.endVertex)) // TODO 
+
+		//check if arc exist and if its capacity is worth zero 
+		bool curr = graph->ArcExists(arc.startVertex, arc.endVertex);
+		if (curr && graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity == 0)
+			graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity = arc.capacity;
+		else if (curr && graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity != 0)
 		{
 			cout << "Arc already exist. Try again." << endl;
 			exit(1);
 		}
-		else
+
+		if (!graph->ArcExists(arc.startVertex, arc.endVertex))
+			graph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
+
+		if (!graph->ArcExists(arc.endVertex, arc.startVertex))
+			graph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
+
+		bool currDji = djGraph->ArcExists(arc.startVertex, arc.endVertex);
+		if (curr && djGraph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity == 0)
+			djGraph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity = arc.capacity;
+		else if (curr && djGraph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity != 0)
 		{
-			//check if arc exist and if its capacity is worth zero 
-			bool curr = graph->ArcExists(arc.startVertex, arc.endVertex);
-			if (curr && graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity == 0)
-				graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity = arc.capacity;
-			else if (curr && graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity != 0)
-			{
-				cout << "Arc already exist. Try again." << endl;
-				exit(1);
-			}
-
-			if (!graph->ArcExists(arc.startVertex, arc.endVertex))
-				graph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
-
-			if (!graph->ArcExists(arc.endVertex, arc.startVertex))
-				graph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
-
-			bool currDji = djGraph->ArcExists(arc.startVertex, arc.endVertex);
-			if (curr && djGraph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity == 0)
-				djGraph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity = arc.capacity;
-			else if (curr && djGraph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity != 0)
-			{
-				cout << "Arc already exist. Try again." << endl;
-				exit(1);
-			}
-
-			if (!djGraph->ArcExists(arc.startVertex, arc.endVertex))
-				djGraph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
-
-			if (!djGraph->ArcExists(arc.endVertex, arc.startVertex))
-				djGraph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
-			
+			cout << "Arc already exist. Try again." << endl;
+			exit(1);
 		}
+
+		if (!djGraph->ArcExists(arc.startVertex, arc.endVertex))
+			djGraph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
+
+		if (!djGraph->ArcExists(arc.endVertex, arc.startVertex))
+			djGraph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
+
+
 	}
 }
 
@@ -188,16 +172,16 @@ int ExeSolution::getMaxFlow(Graph& graph, int source, int sink, bool isItGreedyM
 }
 void ExeSolution::findMinCut(Graph& graph, int source, int sink)
 {
-	vector<int> parent(graph.vertixAmount,-1);
+	vector<int> parent(graph.vertixAmount, -1);
 	vector<int> minCut_S, minCut_T;
-	
+
 	BFS(source, sink, parent);
 	minCut_S.push_back(source + 1);
 	for (int i = 0; i < graph.vertixAmount; i++)
 	{
-		if(i==source)
+		if (i == source)
 			continue;
-		
+
 		if (parent[i] != -1)
 		{
 			minCut_S.push_back(i + 1);
@@ -209,7 +193,7 @@ void ExeSolution::findMinCut(Graph& graph, int source, int sink)
 	}
 	sort(minCut_S.begin(), minCut_S.end());
 	sort(minCut_T.begin(), minCut_T.end());
-	
+
 	cout << "Min cut: S = { ";
 	for (auto i : minCut_S)
 	{
