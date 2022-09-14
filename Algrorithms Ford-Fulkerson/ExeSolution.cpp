@@ -117,9 +117,19 @@ void ExeSolution::createGraphFromInput(const int& vertixAmount, const int& arcsA
 		}
 		else
 		{
-			graph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
+			//check if arc exist and if its capacity is worth zero
+			auto curr = graph->GetAdjList(arc.startVertex).find(arc.endVertex)->capacity;
+			if (graph->ArcExists(arc.startVertex, arc.endVertex) && curr == 0)
+				curr = arc.capacity;
+
+			if (!graph->ArcExists(arc.startVertex, arc.endVertex))
+				graph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
+
+			if (!graph->ArcExists(arc.endVertex, arc.startVertex))
+				graph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
+
+
 			djGraph->AddArc(arc.startVertex, arc.endVertex, arc.capacity, true);
-			graph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
 			djGraph->AddArc(edgesArrInput[i].endVertex, edgesArrInput[i].startVertex, 0, false);
 		}
 	}

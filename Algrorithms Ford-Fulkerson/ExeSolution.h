@@ -6,7 +6,7 @@
 #include "graph.h"
 #include <algorithm>
 
-using std::priority_queue;
+using namespace std;
 
 class ExeSolution
 {
