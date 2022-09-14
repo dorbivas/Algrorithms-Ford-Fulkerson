@@ -164,10 +164,6 @@ void ExeSolution::findMinCut(Graph& graph, int source, int sink)
 	vector<int> parent(graph.vertixAmount,-1);
 	vector<int> minCut_S, minCut_T;
 	
-	/*for (int i = 0; i < graph.vertixAmount; i++) {
-		parent[i] = -1;
-	}*/
-	
 	BFS(source, sink, parent);
 	minCut_S.push_back(source + 1);
 	for (int i = 0; i < graph.vertixAmount; i++)
